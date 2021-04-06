@@ -32,21 +32,22 @@ namespace ExemploRelatorioConsole
             return alturaMaximaDeUmaPagina;
         }
 
-        public bool EhParaPularParaProximaPagina()
+        public bool EhParaPularParaProximaPagina(PdfPTable tabelaPrimaria, PdfPTable tabelaSecundaria)
         {
             var espacoRestanteDaUltimaPagina = writer.GetVerticalPosition(false) - doc.BottomMargin;
-            var espacoJaOcupadoNaUltimaPagina = alturaMaximaDeUmaPagina - espacoRestanteDaUltimaPagina;
+            var somaDaAlturaDaTabelaPrimariaComTituloMaisUmaLinhaDaTabelaSecundaria
+                = tabelaPrimaria.TotalHeight + (tabelaSecundaria.GetRowHeight(0) + tabelaSecundaria.GetRowHeight(1));
 
-            if (espacoJaOcupadoNaUltimaPagina > (alturaMaximaDeUmaPagina * 0.80))
+            //var espacoJaOcupadoNaUltimaPagina = alturaMaximaDeUmaPagina - espacoRestanteDaUltimaPagina;
+
+            if (somaDaAlturaDaTabelaPrimariaComTituloMaisUmaLinhaDaTabelaSecundaria
+                > espacoRestanteDaUltimaPagina)
             {
                 return true;
             }
             return false;
         }
 
-        // Insere a tabela principal no documento,
-        // Exclui todas as rows dessa tabela com um loop com o count rows e DeleteLastRow e
-        // colocar um doc.NewPage()
         public void PulaParaProximaPagina()
         {
             doc.NewPage();
@@ -95,6 +96,17 @@ namespace ExemploRelatorioConsole
             doc.Close();
         }
 
+        public PdfPTable MontaTabelaPrimaria()
+        {
+            PdfPTable tabelaPrimaria = new PdfPTable(3)
+            {
+                TotalWidth = doc.PageSize.Width - doc.LeftMargin - doc.RightMargin,
+                LockedWidth = true
+            };
+
+            return tabelaPrimaria;
+        }
+
         public PdfPTable MontaTabelaSecundaria()
         {
             PdfPTable tabelaSecundaria = new PdfPTable(6)
@@ -102,6 +114,25 @@ namespace ExemploRelatorioConsole
                 TotalWidth = doc.PageSize.Width - doc.LeftMargin - doc.RightMargin,
                 LockedWidth = true
             };
+
+            tabelaSecundaria.DefaultCell.Colspan = 6;
+            tabelaSecundaria.DefaultCell.HorizontalAlignment = Element.ALIGN_CENTER;
+            tabelaSecundaria.DefaultCell.VerticalAlignment = Element.ALIGN_CENTER;
+            tabelaSecundaria.AddCell(new Phrase($"Header Secundario", new Font(Font.FontFamily.COURIER, 15)));
+            tabelaSecundaria.HeaderRows = 1;
+
+            tabelaSecundaria.DefaultCell.Colspan = 0;
+            tabelaSecundaria.DefaultCell.HorizontalAlignment = Element.ALIGN_LEFT;
+
+            for (int j = 0; j < 114; j++)
+            {
+                tabelaSecundaria.AddCell(new Phrase($"Linha {j + 1}, Coluna 1"));
+                tabelaSecundaria.AddCell(new Phrase($"Linha {j + 1}, Coluna 2"));
+                tabelaSecundaria.AddCell(new Phrase($"Linha {j + 1}, Coluna 3"));
+                tabelaSecundaria.AddCell(new Phrase($"Linha {j + 1}, Coluna 4"));
+                tabelaSecundaria.AddCell(new Phrase($"Linha {j + 1}, Coluna 5"));
+                tabelaSecundaria.AddCell(new Phrase($"Linha {j + 1}, Coluna 6"));
+            }
 
             return tabelaSecundaria;
         }
@@ -113,6 +144,25 @@ namespace ExemploRelatorioConsole
                 TotalWidth = doc.PageSize.Width - doc.LeftMargin - doc.RightMargin,
                 LockedWidth = true
             };
+
+            tabelaTerciaria.DefaultCell.Colspan = 6;
+            tabelaTerciaria.DefaultCell.HorizontalAlignment = Element.ALIGN_CENTER;
+            tabelaTerciaria.DefaultCell.VerticalAlignment = Element.ALIGN_CENTER;
+            tabelaTerciaria.AddCell(new Phrase($"Header Terciario", new Font(Font.FontFamily.COURIER, 15)));
+            tabelaTerciaria.HeaderRows = 1;
+
+            tabelaTerciaria.DefaultCell.Colspan = 0;
+            tabelaTerciaria.DefaultCell.HorizontalAlignment = Element.ALIGN_LEFT;
+
+            for (int j = 114; j < 219; j++)
+            {
+                tabelaTerciaria.AddCell(new Phrase($"Linha {j + 1}, Coluna 1"));
+                tabelaTerciaria.AddCell(new Phrase($"Linha {j + 1}, Coluna 2"));
+                tabelaTerciaria.AddCell(new Phrase($"Linha {j + 1}, Coluna 3"));
+                tabelaTerciaria.AddCell(new Phrase($"Linha {j + 1}, Coluna 4"));
+                tabelaTerciaria.AddCell(new Phrase($"Linha {j + 1}, Coluna 5"));
+                tabelaTerciaria.AddCell(new Phrase($"Linha {j + 1}, Coluna 6"));
+            }
 
             return tabelaTerciaria;
         }

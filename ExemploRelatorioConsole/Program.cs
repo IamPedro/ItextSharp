@@ -16,44 +16,42 @@ namespace ExemploRelatorioConsole
             MontadorPDF montador = new MontadorPDF();
             montador.AbreDocumento();
 
-            PdfPTable tabelaSecundaria = montador.MontaTabelaSecundaria();
-
-            int i = 0;
-            for (; i < 121; i++)
+            for (int i = 0; i < 5; i++)
             {
-                tabelaSecundaria.AddCell(new Phrase($"Linha {i + 1}, Coluna 1"));
-                tabelaSecundaria.AddCell(new Phrase($"Linha {i + 1}, Coluna 2"));
-                tabelaSecundaria.AddCell(new Phrase($"Linha {i + 1}, Coluna 3"));
-                tabelaSecundaria.AddCell(new Phrase($"Linha {i + 1}, Coluna 4"));
-                tabelaSecundaria.AddCell(new Phrase($"Linha {i + 1}, Coluna 5"));
-                tabelaSecundaria.AddCell(new Phrase($"Linha {i + 1}, Coluna 6"));
+                PdfPTable tabelaPrimaria = montador.MontaTabelaPrimaria();
+                tabelaPrimaria.DefaultCell.Colspan = 3;
+                tabelaPrimaria.DefaultCell.HorizontalAlignment = Element.ALIGN_CENTER;
+                tabelaPrimaria.DefaultCell.VerticalAlignment = Element.ALIGN_CENTER;
+                tabelaPrimaria.AddCell(new Phrase($"Header Primario {i + 1}", new Font(Font.FontFamily.COURIER, 20)));
+
+                tabelaPrimaria.DefaultCell.Colspan = 0;
+                tabelaPrimaria.DefaultCell.HorizontalAlignment = Element.ALIGN_LEFT;
+                tabelaPrimaria.AddCell(new Phrase($"Header 1"));
+                tabelaPrimaria.AddCell(new Phrase($"Header 2"));
+                tabelaPrimaria.AddCell(new Phrase($"Header 3"));
+                tabelaPrimaria.HeaderRows = 2;
+
+                tabelaPrimaria.AddCell(new Phrase($"Responsavel 1"));
+                tabelaPrimaria.AddCell(new Phrase($"Responsavel 2"));
+                tabelaPrimaria.AddCell(new Phrase($"Responsavel 3"));
+
+                PdfPTable tabelaSecundaria = montador.MontaTabelaSecundaria();
+
+                PdfPTable tabelaTerciaria = montador.MontaTabelaTerciaria();
+
+                if (montador.EhParaPularParaProximaPagina(tabelaPrimaria, tabelaSecundaria))
+                {
+                    montador.PulaParaProximaPagina();
+                }
+
+                montador.tabelaPrincipal.AddCell(new PdfPCell(tabelaPrimaria));
+                montador.tabelaPrincipal.AddCell(new PdfPCell(tabelaSecundaria));
+                montador.tabelaPrincipal.AddCell(new PdfPCell(tabelaTerciaria));
+
+                montador.InsereTabelaNoDocumento();
+                montador.LimpaTabelaPrincipal();
             }
 
-            montador.tabelaPrincipal.AddCell(new PdfPCell(tabelaSecundaria));
-            montador.InsereTabelaNoDocumento();
-            montador.LimpaTabelaPrincipal();
-
-            if (montador.EhParaPularParaProximaPagina()) 
-            { 
-                montador.PulaParaProximaPagina(); 
-            } 
-
-            PdfPTable tabelaTerciaria = montador.MontaTabelaTerciaria();
-
-            for (; i < 210; i++)
-            {
-                tabelaTerciaria.AddCell(new Phrase($"Linha {i + 1}, Coluna 1"));
-                tabelaTerciaria.AddCell(new Phrase($"Linha {i + 1}, Coluna 2"));
-                tabelaTerciaria.AddCell(new Phrase($"Linha {i + 1}, Coluna 3"));
-                tabelaTerciaria.AddCell(new Phrase($"Linha {i + 1}, Coluna 4"));
-                tabelaTerciaria.AddCell(new Phrase($"Linha {i + 1}, Coluna 5"));
-                tabelaTerciaria.AddCell(new Phrase($"Linha {i + 1}, Coluna 6"));
-            }
-
-            montador.tabelaPrincipal.AddCell(new PdfPCell(tabelaTerciaria));
-
-            montador.InsereTabelaNoDocumento();
-            montador.LimpaTabelaPrincipal();
             montador.FechaDocumento();
 
             montador.AbrePDF();
