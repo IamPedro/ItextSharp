@@ -17,6 +17,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Properties;
+using iText.Layout.Renderer;
 
 namespace IntroducaoAoIText
 {
@@ -41,11 +42,13 @@ namespace IntroducaoAoIText
                 new Rectangle(offset + columnWidth, offset, columnWidth, columnHeigth),
                 new Rectangle(offset + columnHeigth * 2 + 5, offset, columnWidth, columnHeigth)
             };
+            //document.RenderizadorDeColunas(3, 5);
 
-            document.SetRenderer(new ColumnDocumentRenderer(document, columns));
-
-            string caminhoImagem = @"C:\Users\SAMIR-IBRAHIM-EM\Desktop\BELIZE_HOLE.png";
-            Image imagem = new Image(ImageDataFactory.Create(caminhoImagem)).SetWidth(columnWidth);
+            document.SetRenderer(document.RenderizadorDeColunas(3, 5));
+            float alturaDaColuna =  document.AlturaDaColuna();
+            float larguraDaColuna = document.LarguraDaColuna(3, 5);
+            string caminhoImagem = @"C:\Users\SAMIR-IBRAHIM-EM\Desktop\Estagio\BELIZE_HOLE.png";
+            Image imagem = new Image(ImageDataFactory.Create(caminhoImagem)).SetWidth(larguraDaColuna).SetHeight(alturaDaColuna);
 
             string conteudo = @"Integer ac nulla et quam tristique viverra. 
                                 Integer et hendrerit neque. Maecenas aliquet elementum massa non placerat. 
@@ -53,16 +56,60 @@ namespace IntroducaoAoIText
                                 Vestibulum tempus mollis lectus at malesuada. 
                                 Proin ac iaculis sem. Integer nec dapibus mauris, sed congue turpis. 
                                 Pellentesque consectetur molestie ullamcorper. 
-                                Nam scelerisque, quam ut vulputate sagittis, sapien sapien pharetra justo, tempor hendrerit nibh nisl sed massa. 
-                                In eget condimentum velit. Nam congue magna a scelerisque iaculis. 
-                                Nam id odio et enim convallis fermentum et non enim.\n\n";
+                                Nam scelerisque, quam ut vulputate sagittis, sapien sapien pharetra justo, tempor hendrerit nibh 
+                                nisl sed massa. In eget condimentum velit. Nam congue magna a scelerisque iaculis. 
+                                Nam id odio et enim convallis fermentum et non enim.";
+
+            string conteudo2 = @"Sagittis primis neque volutpat convallis sodales vulputate ac leo, 
+                                lectus quis maecenas orci posuere netus ad etiam, dictumst varius porta 
+                                senectus varius morbi eleifend. mi lectus vivamus sapien hac quisque vitae lacinia tempor, 
+                                consectetur ullamcorper morbi curae est nisi fusce pharetra, purus sodales a cras cursus
+                                convallis interdum. molestie pharetra luctus phasellus nullam convallis lacus tellus massa augue, 
+                                aenean condimentum nec accumsan nec sit tristique a orci, a metus tortor mollis senectus tincidunt 
+                                hendrerit venenatis. litora blandit nullam suspendisse ut potenti primis tempus tristique mi 
+                                arcu sagittis rhoncus interdum, curabitur elit aliquam consequat sociosqu pellentesque himenaeos 
+                                platea per neque rhoncus aliquet.";
 
             document.Add(imagem);
+            //document.Add(new AreaBreak());
             document.Add(new Paragraph(conteudo));
-
+            //document.Add(new AreaBreak());
+            document.Add(new Paragraph(conteudo2));
             document.Close();
 
 
+        }
+
+        public static DocumentRenderer RenderizadorDeColunas(this Document documento, int quantidadeDeColunas, float espacoEntreColunas)
+        {
+            PageSize tamanhoDaPagina = documento.GetPdfDocument().GetDefaultPageSize();
+            float larguraDaColuna = (tamanhoDaPagina.GetWidth() - documento.GetLeftMargin() - documento.GetRightMargin()
+                - (espacoEntreColunas * (quantidadeDeColunas - 1))) / quantidadeDeColunas;
+            float alturaDaColuna = tamanhoDaPagina.GetHeight() - documento.GetBottomMargin() - documento.GetTopMargin();
+            Rectangle[] colunas = new Rectangle[quantidadeDeColunas];
+            for (int i = 0; i < quantidadeDeColunas; i++)
+            {
+                colunas[i] = new Rectangle(documento.GetLeftMargin() + ((larguraDaColuna + espacoEntreColunas) * i),
+                    documento.GetBottomMargin(), larguraDaColuna, alturaDaColuna);
+            }
+            return new ColumnDocumentRenderer(documento, false, colunas);
+        }
+
+        public static float AlturaDaColuna(this Document documento)
+        {
+            PageSize tamanhoDaPagina = documento.GetPdfDocument().GetDefaultPageSize();
+            float alturaDaColuna = tamanhoDaPagina.GetHeight() - documento.GetBottomMargin() - documento.GetTopMargin();
+
+            return alturaDaColuna;
+        }
+
+        public static float LarguraDaColuna(this Document documento, int quantidadeDeColunas, float espacoEntreColunas)
+        {
+            PageSize tamanhoDaPagina = documento.GetPdfDocument().GetDefaultPageSize();
+            float larguraDaColuna = (tamanhoDaPagina.GetWidth() - documento.GetLeftMargin() - documento.GetRightMargin()
+                                     - (espacoEntreColunas * (quantidadeDeColunas - 1))) / quantidadeDeColunas;
+
+            return larguraDaColuna;
         }
     }
 }
