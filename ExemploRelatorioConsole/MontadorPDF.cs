@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 
@@ -172,5 +174,76 @@ namespace ExemploRelatorioConsole
             System.Diagnostics.Process.Start(caminho);
         }
 
+        public PdfPTable CriaTabelaCustomizada(int qtdColunasDinamicas)
+        {
+            int qtdColunasFixas = 8;
+            int qtdTotalColunas = qtdColunasFixas + qtdColunasDinamicas;
+
+            return new PdfPTable(ObtemLarguras(qtdTotalColunas, qtdColunasDinamicas)) 
+            {
+                WidthPercentage = 100,
+                TotalWidth = doc.PageSize.Width - doc.LeftMargin - doc.RightMargin
+            };
+        }
+
+        public float[] ObtemLarguras(int qtdTotalColunas, int qtdColunasDinamicas)
+        {
+            float[] largurasColunas = new float[qtdTotalColunas];
+
+            DefineLarguraColunasFixas(largurasColunas, qtdTotalColunas);
+
+            DefineLarguraColunasDinamicas(largurasColunas, qtdColunasDinamicas);
+
+            DistribuiLarguraRestanteDaTabela(largurasColunas);
+
+            return largurasColunas;
+        }
+
+        private void DefineLarguraColunasFixas(float[] largurasColunas, int qtdTotalColunas)
+        {
+            largurasColunas[0] = 3;
+            largurasColunas[1] = 13;
+            largurasColunas[2] = 8;
+            largurasColunas[3] = 8;
+            largurasColunas[4] = 7;
+            largurasColunas[qtdTotalColunas - 3] = 5;
+            largurasColunas[qtdTotalColunas - 2] = 8;
+            largurasColunas[qtdTotalColunas - 1] = 5;
+        }
+
+
+        private void DefineLarguraColunasDinamicas(float[] largurasColunas, int qtdColunasDinamicas)
+        {
+            var larguraRestanteDaTabela = 100 - largurasColunas.Sum();
+            var larguraColunaDinamica = larguraRestanteDaTabela / qtdColunasDinamicas;
+            for (int i = 5; i < largurasColunas.Length - 3; i++)
+            {
+                largurasColunas[i] = larguraColunaDinamica > 5 ? 5 : larguraColunaDinamica;
+            }
+        }
+
+        private void DistribuiLarguraRestanteDaTabela(float[] largurasColunas)
+        {
+            var larguraRestanteDaTabela = 100 - largurasColunas.Sum();
+            for (int i = 0; larguraRestanteDaTabela > 0; i++)
+            {
+                if (larguraRestanteDaTabela < 5) 
+                {
+                    largurasColunas[1] = larguraRestanteDaTabela;
+                }
+                else
+                {
+                    if(i <= 1 || i > 3)
+                    {
+                        largurasColunas[1] += 5;
+                    }
+                    else if(i == 2)
+                    {
+                        largurasColunas[largurasColunas.Length - 3] += 4;
+                    }
+                }
+                larguraRestanteDaTabela -= 5;
+            }
+        }
     }
 }

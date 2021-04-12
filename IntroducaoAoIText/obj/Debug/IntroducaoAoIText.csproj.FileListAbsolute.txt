@@ -98,7 +98,6 @@ C:\Users\pedro\Desktop\StudyngItextSharp\ItextSharp\IntroducaoAoIText\bin\Debug\
 C:\Users\pedro\Desktop\StudyngItextSharp\ItextSharp\IntroducaoAoIText\bin\Debug\itext.styledxmlparser.xml
 C:\Users\pedro\Desktop\StudyngItextSharp\ItextSharp\IntroducaoAoIText\bin\Debug\itext.svg.xml
 C:\Users\pedro\Desktop\StudyngItextSharp\ItextSharp\IntroducaoAoIText\bin\Debug\itextsharp.xml
-C:\Users\pedro\Desktop\StudyngItextSharp\ItextSharp\IntroducaoAoIText\obj\Debug\IntroducaoAoIText.csprojAssemblyReference.cache
 C:\Users\pedro\Desktop\StudyngItextSharp\ItextSharp\IntroducaoAoIText\obj\Debug\IntroducaoAoIText.csproj.CoreCompileInputs.cache
 C:\Users\pedro\Desktop\StudyngItextSharp\ItextSharp\IntroducaoAoIText\obj\Debug\IntroducaoAoIText.csproj.CopyComplete
 C:\Users\pedro\Desktop\StudyngItextSharp\ItextSharp\IntroducaoAoIText\obj\Debug\IntroducaoAoIText.exe
