@@ -28,7 +28,7 @@ namespace IntroducaoAoIText
             using PdfDocument pdf = new PdfDocument(writer);
             using Document document = new Document(pdf);
 
-            string caminhoImagem = @"C:\Users\SAMIR-IBRAHIM-EM\Desktop\BELIZE_HOLE.png";
+            string caminhoImagem = @"C:\Users\SAMIR-IBRAHIM-EM\Desktop\Estagio\BELIZE_HOLE.png";
             Image imagem = new Image(ImageDataFactory.Create(caminhoImagem));
 
             document.Add(imagem);

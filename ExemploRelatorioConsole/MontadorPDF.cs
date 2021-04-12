@@ -9,23 +9,18 @@ namespace ExemploRelatorioConsole
     public class MontadorPDF
     {
         private Document doc;
-        private const string caminho = @"C:\Users\pedro\Desktop\PDF\study.pdf";
+        private const string caminho = @"C:\WorkPedro\pdf\study.pdf";
         private PdfWriter writer;
-        public PdfPTable tabelaPrincipal;
         public float alturaMaximaDeUmaPagina;
+        private PdfPTable tabelaPrimaria;
+        private PdfPTable tabelaSecundaria;
+        private PdfPTable tabelaTerciaria;
 
         public MontadorPDF()
         {
             doc = new Document(PageSize.A4);
             doc.SetMargins(40, 40, 40, 80);
             writer = PdfWriter.GetInstance(doc, new FileStream(caminho, FileMode.Create));
-            tabelaPrincipal = new PdfPTable(1)
-            {
-                WidthPercentage = 100,
-                SplitLate = false,
-                TotalWidth = doc.PageSize.Width - doc.LeftMargin - doc.RightMargin,
-                LockedWidth = true
-            };
             alturaMaximaDeUmaPagina = doc.PageSize.Height - doc.TopMargin - doc.BottomMargin;
         }
 
@@ -36,18 +31,35 @@ namespace ExemploRelatorioConsole
 
         public bool EhParaPularParaProximaPagina(PdfPTable tabelaPrimaria, PdfPTable tabelaSecundaria)
         {
-            var espacoRestanteDaUltimaPagina = writer.GetVerticalPosition(false) - doc.BottomMargin;
-            var somaDaAlturaDaTabelaPrimariaComTituloMaisUmaLinhaDaTabelaSecundaria
-                = tabelaPrimaria.TotalHeight + (tabelaSecundaria.GetRowHeight(0) + tabelaSecundaria.GetRowHeight(1));
+            int qntdHeaderRows = tabelaSecundaria.HeaderRows;
+            var alturaAtualDoCursor = writer.GetVerticalPosition(false);
+            var espacoRestanteDaUltimaPagina = alturaAtualDoCursor - doc.BottomMargin;
+            var somaDaAlturaDaTabelaPrimariaComHeadersMaisUmRegistroDaTabelaSecundaria
+                = tabelaPrimaria.TotalHeight;
 
             //var espacoJaOcupadoNaUltimaPagina = alturaMaximaDeUmaPagina - espacoRestanteDaUltimaPagina;
-
-            if (somaDaAlturaDaTabelaPrimariaComTituloMaisUmaLinhaDaTabelaSecundaria
-                > espacoRestanteDaUltimaPagina)
+            for (int i = 0; i < qntdHeaderRows + 1; i++)
             {
-                return true;
+                somaDaAlturaDaTabelaPrimariaComHeadersMaisUmRegistroDaTabelaSecundaria += tabelaSecundaria.GetRowHeight(i);
             }
-            return false;
+
+            return somaDaAlturaDaTabelaPrimariaComHeadersMaisUmRegistroDaTabelaSecundaria
+                   > espacoRestanteDaUltimaPagina;
+        }
+
+        public bool EhParaPularParaProximaPagina(PdfPTable tabelaTerciaria)
+        {
+            int qntdHeaderRows = tabelaTerciaria.HeaderRows;
+            var alturaAtualDoCursor = writer.GetVerticalPosition(false);
+            var espacoRestanteDaUltimaPagina = alturaAtualDoCursor - doc.BottomMargin;
+            var somaDaAlturaDosHeadersDaTabelaTerciariaMaisUmRegistro = 0.0;
+
+            for (int i = 0; i < qntdHeaderRows + 1; i++)
+            {
+                somaDaAlturaDosHeadersDaTabelaTerciariaMaisUmRegistro += tabelaTerciaria.GetRowHeight(i);
+            }
+            return somaDaAlturaDosHeadersDaTabelaTerciariaMaisUmRegistro
+                   > espacoRestanteDaUltimaPagina;
         }
 
         public void PulaParaProximaPagina()
@@ -55,11 +67,11 @@ namespace ExemploRelatorioConsole
             doc.NewPage();
         }
 
-        public void LimpaTabelaPrincipal()
+        public void LimpaTabela(PdfPTable tabela)
         {
-            while (tabelaPrincipal.Rows.Count > 0)
+            while (tabela.Rows.Count > 0)
             {
-                tabelaPrincipal.DeleteLastRow();
+                tabela.DeleteLastRow();
             }
         }
 
@@ -72,15 +84,7 @@ namespace ExemploRelatorioConsole
                 FixedHeight = remainingPageSpace,
                 //BackgroundColor = BaseColor.BLUE
             };
-            tabelaPrincipal.DeleteLastRow();
 
-            tabelaPrincipal.AddCell(cell);
-
-            InsereTabelaNoDocumento();
-
-            var qtdRowsTP = tabelaPrincipal.Rows.Count;           
-            tabelaPrincipal.DeleteLastRow();
-            qtdRowsTP = tabelaPrincipal.Rows.Count;                        
         }
 
         public void AbreDocumento()
@@ -88,9 +92,9 @@ namespace ExemploRelatorioConsole
             doc.Open();
         }
 
-        public void InsereTabelaNoDocumento()
+        public void InsereTabelaNoDocumento(PdfPTable tabela)
         {            
-            doc.Add(tabelaPrincipal);            
+            doc.Add(tabela);            
         }
 
         public void FechaDocumento()
@@ -98,20 +102,34 @@ namespace ExemploRelatorioConsole
             doc.Close();
         }
 
-        public PdfPTable MontaTabelaPrimaria()
+        public void MontaTabelaPrimaria(int i)
         {
-            PdfPTable tabelaPrimaria = new PdfPTable(3)
+            tabelaPrimaria = new PdfPTable(3)
             {
                 TotalWidth = doc.PageSize.Width - doc.LeftMargin - doc.RightMargin,
                 LockedWidth = true
             };
 
-            return tabelaPrimaria;
+            tabelaPrimaria.DefaultCell.Colspan = 3;
+            tabelaPrimaria.DefaultCell.HorizontalAlignment = Element.ALIGN_CENTER;
+            tabelaPrimaria.DefaultCell.VerticalAlignment = Element.ALIGN_CENTER;
+            tabelaPrimaria.AddCell(new Phrase($"Header Primario {i + 1}", new Font(Font.FontFamily.COURIER, 20)));
+
+            tabelaPrimaria.DefaultCell.Colspan = 0;
+            tabelaPrimaria.DefaultCell.HorizontalAlignment = Element.ALIGN_LEFT;
+            tabelaPrimaria.AddCell(new Phrase($"Header 1"));
+            tabelaPrimaria.AddCell(new Phrase($"Header 2"));
+            tabelaPrimaria.AddCell(new Phrase($"Header 3"));
+            tabelaPrimaria.HeaderRows = 2;
+
+            tabelaPrimaria.AddCell(new Phrase($"Responsavel 1"));
+            tabelaPrimaria.AddCell(new Phrase($"Responsavel 2"));
+            tabelaPrimaria.AddCell(new Phrase($"Responsavel 3"));
         }
 
-        public PdfPTable MontaTabelaSecundaria()
+        public void MontaTabelaSecundaria()
         {
-            PdfPTable tabelaSecundaria = new PdfPTable(6)
+            tabelaSecundaria = new PdfPTable(6)
             {
                 TotalWidth = doc.PageSize.Width - doc.LeftMargin - doc.RightMargin,
                 LockedWidth = true
@@ -136,12 +154,18 @@ namespace ExemploRelatorioConsole
                 tabelaSecundaria.AddCell(new Phrase($"Linha {j + 1}, Coluna 6"));
             }
 
-            return tabelaSecundaria;
+            if (EhParaPularParaProximaPagina(tabelaPrimaria, tabelaSecundaria))
+            {
+                PulaParaProximaPagina();
+            }
+
+            InsereTabelaNoDocumento(tabelaPrimaria);
+            InsereTabelaNoDocumento(tabelaSecundaria);
         }
 
-        public PdfPTable MontaTabelaTerciaria()
+        public void MontaTabelaTerciaria()
         {
-            PdfPTable tabelaTerciaria = new PdfPTable(6)
+            tabelaTerciaria = new PdfPTable(6)
             {
                 TotalWidth = doc.PageSize.Width - doc.LeftMargin - doc.RightMargin,
                 LockedWidth = true
@@ -166,7 +190,24 @@ namespace ExemploRelatorioConsole
                 tabelaTerciaria.AddCell(new Phrase($"Linha {j + 1}, Coluna 6"));
             }
 
-            return tabelaTerciaria;
+            if (EhParaPularParaProximaPagina(tabelaTerciaria))
+            {
+                PulaParaProximaPagina();
+            }
+
+            InsereTabelaNoDocumento(tabelaTerciaria);
+        }
+
+        public float Soma(PdfPTable tabela)
+        {
+            float soma = 0;
+
+            for(int i = 0; i < tabela.HeaderRows; i++)
+            {
+                soma += tabela.GetRowHeight(i);
+            }
+
+            return soma;
         }
 
         public void AbrePDF()
