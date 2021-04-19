@@ -103,7 +103,6 @@ C:\Users\pedro\Desktop\StudyngItextSharp\ItextSharp\ExemploRelatorioConsole\bin\
 C:\Users\pedro\Desktop\StudyngItextSharp\ItextSharp\ExemploRelatorioConsole\bin\Debug\itext.styledxmlparser.xml
 C:\Users\pedro\Desktop\StudyngItextSharp\ItextSharp\ExemploRelatorioConsole\bin\Debug\itext.svg.xml
 C:\Users\pedro\Desktop\StudyngItextSharp\ItextSharp\ExemploRelatorioConsole\bin\Debug\itextsharp.xml
-C:\Users\pedro\Desktop\StudyngItextSharp\ItextSharp\ExemploRelatorioConsole\obj\Debug\ExemploRelatorioConsole.csprojAssemblyReference.cache
 C:\Users\pedro\Desktop\StudyngItextSharp\ItextSharp\ExemploRelatorioConsole\obj\Debug\ExemploRelatorioConsole.csproj.CoreCompileInputs.cache
 C:\Users\pedro\Desktop\StudyngItextSharp\ItextSharp\ExemploRelatorioConsole\obj\Debug\ExemploRelatorioConsole.csproj.CopyComplete
 C:\Users\pedro\Desktop\StudyngItextSharp\ItextSharp\ExemploRelatorioConsole\obj\Debug\ExemploRelatorioConsole.exe
