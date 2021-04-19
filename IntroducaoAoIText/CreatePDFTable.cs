@@ -10,9 +10,11 @@ using iText.IO.Font;
 using iText.IO.Font.Constants;
 using iText.IO.Image;
 using iText.IO.Util;
+using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Geom;
 using iText.Layout;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 
@@ -48,7 +50,22 @@ namespace IntroducaoAoIText
             PdfPage newPage = pdf.AddNewPage(newPageSize);
 
             document.Add(new AreaBreak());
-            document.Add(new Paragraph("Teste do tamanho da pagina"));
+            //document.Add(new Paragraph("Teste do tamanho da pagina"));
+
+            string premierDatas = @"C:\WorkPedro\premier_league.csv";
+            Table premierTable = new Table(10)
+                .UseAllAvailableWidth()
+                .SetTextAlignment(TextAlignment.CENTER)
+                .SetHorizontalAlignment(HorizontalAlignment.CENTER);
+            using StreamReader premiReader = File.OpenText(premierDatas);
+            string primierLine = premiReader.ReadLine();
+            PopulaTabela(premierTable, primierLine, bold, true);
+            while ((primierLine = premiReader.ReadLine()) != null)
+            {
+                PopulaTabela(premierTable, primierLine, font, false);
+            }
+
+            document.Add(premierTable);
 
             document.Close();
         }
@@ -56,17 +73,37 @@ namespace IntroducaoAoIText
         private static void PopulaTabela(Table table, string line, PdfFont font, bool isHeader)
         {
             StringTokenizer tokenizer = new StringTokenizer(line, ";");
+            int numeroColuna = 0;
+
             while (tokenizer.HasMoreTokens())
             {
                 if (isHeader)
                 {
-                    table.AddHeaderCell(new Cell().Add(new Paragraph(tokenizer.NextToken()).SetFont(font)));
+                    table.AddHeaderCell(new Cell().Add(new Paragraph(tokenizer.NextToken())
+                        .SetFont(font)
+                        .SetPadding(5)
+                        .SetBorder(null)));
                 }
                 else
                 {
-                    table.AddCell(new Cell().Add(new Paragraph(tokenizer.NextToken()).SetFont(font)));
+                    numeroColuna++;
+                    table.AddCell(new Cell().Add(new Paragraph(tokenizer.NextToken())
+                        .SetFont(font)
+                        .SetBorder(new SolidBorder(ColorConstants.BLACK, 0.5f)))
+                        .SetBackgroundColor(backColor(numeroColuna)));
                 }
             }
+        }
+
+        private static Color backColor(int numeroColuna)
+        {
+            return numeroColuna switch
+            {
+                4 => ColorConstants.GREEN,
+                5 => ColorConstants.YELLOW,
+                6 => ColorConstants.RED,
+                _ => ColorConstants.BLUE,
+            };
         }
     }
 }
