@@ -46,38 +46,40 @@ namespace IntroducaoAoIText
             //};
             //document.RenderizadorDeColunas(3, 5);
 
-            //document.SetRenderer(document.RenderizadorDeColunas(3, 5));
-            //float alturaDaColuna = document.AlturaDaColuna();
-            //float larguraDaColuna = document.LarguraDaColuna(3, 5);
-            //string caminhoImagem = @"C:\Users\SAMIR-IBRAHIM-EM\Desktop\Estagio\BELIZE_HOLE.png";
-            //Image imagem = new Image(ImageDataFactory.Create(caminhoImagem)).SetWidth(larguraDaColuna).SetHeight(alturaDaColuna);
+            document.SetRenderer(document.RenderizadorDeColunas(3, 5));
+            float alturaDaColuna = document.AlturaDaColuna();
+            float larguraDaColuna = document.LarguraDaColuna(3, 5);
+            string caminhoImagem = @"C:\Users\SAMIR-IBRAHIM-EM\Desktop\Estagio\BELIZE_HOLE.png";
+            Image imagem = new Image(ImageDataFactory.Create(caminhoImagem)).SetWidth(larguraDaColuna).SetHeight(alturaDaColuna);
 
-            //string conteudo = @"Integer ac nulla et quam tristique viverra. 
-            //                    Integer et hendrerit neque. Maecenas aliquet elementum massa non placerat. 
-            //                    Etiam sed vestibulum velit, eu consequat neque. 
-            //                    Vestibulum tempus mollis lectus at malesuada. 
-            //                    Proin ac iaculis sem. Integer nec dapibus mauris, sed congue turpis. 
-            //                    Pellentesque consectetur molestie ullamcorper. 
-            //                    Nam scelerisque, quam ut vulputate sagittis, sapien sapien pharetra justo, tempor hendrerit nibh 
-            //                    nisl sed massa. In eget condimentum velit. Nam congue magna a scelerisque iaculis. 
-            //                    Nam id odio et enim convallis fermentum et non enim.";
+            string conteudo = @"Integer ac nulla et quam tristique viverra. 
+                                Integer et hendrerit neque. Maecenas aliquet elementum massa non placerat. 
+                                Etiam sed vestibulum velit, eu consequat neque. 
+                                Vestibulum tempus mollis lectus at malesuada. 
+                                Proin ac iaculis sem. Integer nec dapibus mauris, sed congue turpis. 
+                                Pellentesque consectetur molestie ullamcorper. 
+                                Nam scelerisque, quam ut vulputate sagittis, sapien sapien pharetra justo, tempor hendrerit nibh 
+                                nisl sed massa. In eget condimentum velit. Nam congue magna a scelerisque iaculis. 
+                                Nam id odio et enim convallis fermentum et non enim.";
 
-            //string conteudo2 = @"Sagittis primis neque volutpat convallis sodales vulputate ac leo, 
-            //                    lectus quis maecenas orci posuere netus ad etiam, dictumst varius porta 
-            //                    senectus varius morbi eleifend. mi lectus vivamus sapien hac quisque vitae lacinia tempor, 
-            //                    consectetur ullamcorper morbi curae est nisi fusce pharetra, purus sodales a cras cursus
-            //                    convallis interdum. molestie pharetra luctus phasellus nullam convallis lacus tellus massa augue, 
-            //                    aenean condimentum nec accumsan nec sit tristique a orci, a metus tortor mollis senectus tincidunt 
-            //                    hendrerit venenatis. litora blandit nullam suspendisse ut potenti primis tempus tristique mi 
-            //                    arcu sagittis rhoncus interdum, curabitur elit aliquam consequat sociosqu pellentesque himenaeos 
-            //                    platea per neque rhoncus aliquet.";
+            string conteudo2 = @"Sagittis primis neque volutpat convallis sodales vulputate ac leo, 
+                                lectus quis maecenas orci posuere netus ad etiam, dictumst varius porta 
+                                senectus varius morbi eleifend. mi lectus vivamus sapien hac quisque vitae lacinia tempor, 
+                                consectetur ullamcorper morbi curae est nisi fusce pharetra, purus sodales a cras cursus
+                                convallis interdum. molestie pharetra luctus phasellus nullam convallis lacus tellus massa augue, 
+                                aenean condimentum nec accumsan nec sit tristique a orci, a metus tortor mollis senectus tincidunt 
+                                hendrerit venenatis. litora blandit nullam suspendisse ut potenti primis tempus tristique mi 
+                                arcu sagittis rhoncus interdum, curabitur elit aliquam consequat sociosqu pellentesque himenaeos 
+                                platea per neque rhoncus aliquet.";
 
-            //document.Add(imagem);
+            document.Add(imagem);
             //document.Add(new AreaBreak());
-            //document.Add(new Paragraph(conteudo));
+            document.Add(new Paragraph(conteudo));
             //document.Add(new AreaBreak());
-            //document.Add(new Paragraph(conteudo2));
+            document.Add(new Paragraph(conteudo2));
 
+            document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+            document.SetRenderer(document.RenderizadorDeColunas(1, 0));
             document.Add(new Paragraph("Exemplo de anotação"));
 
             PdfAnnotation annotation = new PdfTextAnnotation(new Rectangle(20, 800, 0, 0))

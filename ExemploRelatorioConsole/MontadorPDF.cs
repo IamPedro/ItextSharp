@@ -75,6 +75,18 @@ namespace ExemploRelatorioConsole
             }
         }
 
+        public float AlturaDaTabela(PdfPTable tabela)
+        {
+            float altura = 0;
+
+            for(int i = 0; i < tabela.Rows.Count; i++)
+            {
+                altura += tabela.GetRowHeight(i);
+            }
+
+            return altura;
+        }
+
         public void PulaParaProximaPagina2()
         {
             var remainingPageSpace = writer.GetVerticalPosition(false) - doc.BottomMargin;
