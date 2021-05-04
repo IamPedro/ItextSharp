@@ -85,6 +85,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MyEventHandler.cs" />
     <Compile Include="CreatePDFCanvas.cs" />
     <Compile Include="CreatePDFDocCanvas.cs" />
     <Compile Include="CreatePDFImage.cs" />

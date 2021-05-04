@@ -17,6 +17,7 @@ using iText.Layout;
 using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
+using iText.Kernel.Events;
 
 namespace IntroducaoAoIText
 {
@@ -28,6 +29,7 @@ namespace IntroducaoAoIText
             using FileStream fileStream = new FileStream(caminho, FileMode.Create);
             using PdfWriter writer = new PdfWriter(fileStream);
             using PdfDocument pdf = new PdfDocument(writer);
+            pdf.AddEventHandler(PdfDocumentEvent.END_PAGE, new MyEventHandler());
             using Document document = new Document(pdf, PageSize.A4.Rotate());
             PdfFont font = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
             PdfFont bold = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
